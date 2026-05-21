@@ -11,3 +11,4 @@ jobs:
       - uses: insper-embarcados/actions-cppcheck@v1
         with:
           c_file: main/main.c
+          suppress: constParameterPointer

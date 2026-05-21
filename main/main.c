@@ -253,11 +253,15 @@ void stats_task(void *p) {
 #endif
 
 /* Chamado pelo FreeRTOS ao detectar estouro de stack (configCHECK_FOR_STACK_OVERFLOW=2) */
-void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName) { // cppcheck-suppress constParameterPointer
+/* A assinatura de vApplicationStackOverflowHook e fixada pelo FreeRTOS (task.h)
+ * como char* (nao const). Nao e possivel alterar sem conflito de tipo. */
+// cppcheck-suppress-begin constParameterPointer
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName) {
     (void)xTask;
     printf("STACK OVERFLOW: %s\n", pcTaskName);
     for (;;);
 }
+// cppcheck-suppress-end constParameterPointer
 
 /* -------------------------------------------------------------------------
  * main
