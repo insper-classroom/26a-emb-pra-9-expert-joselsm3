@@ -253,7 +253,7 @@ void stats_task(void *p) {
 #endif
 
 /* Chamado pelo FreeRTOS ao detectar estouro de stack (configCHECK_FOR_STACK_OVERFLOW=2) */
-void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName) {
+void vApplicationStackOverflowHook(TaskHandle_t xTask, const char *pcTaskName) {
     (void)xTask;
     printf("STACK OVERFLOW: %s\n", pcTaskName);
     for (;;);
