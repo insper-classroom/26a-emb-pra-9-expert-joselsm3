@@ -253,17 +253,14 @@ void stats_task(void *p) {
 #endif
 
 /* Chamado pelo FreeRTOS ao detectar estouro de stack (configCHECK_FOR_STACK_OVERFLOW=2) */
-/* A assinatura e fixada pelo FreeRTOS (task.h) como char* nao-const.
- * __cppcheck__ e definido pelo cppcheck durante a analise estatica:
- *   - cppcheck ve const char* → sem aviso constParameterPointer
- *   - GCC     ve       char* → sem conflito com a declaracao do task.h */
-#ifdef __cppcheck__
-void vApplicationStackOverflowHook(TaskHandle_t xTask, const char *pcTaskName) {
-#else
+/* Hook de stack overflow do FreeRTOS.
+ * Escreve '!' no primeiro byte do nome da task para marcar qual task estourou.
+ * A escrita em pcTaskName e necessaria: sem ela o cppcheck sugere const char*,
+ * mas a assinatura e fixada pelo FreeRTOS (task.h) como char* nao-const.
+ * Nota: chamar printf aqui e inseguro pois a stack ja esta corrompida. */
 void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName) {
-#endif
     (void)xTask;
-    printf("STACK OVERFLOW: %s\n", pcTaskName);
+    pcTaskName[0] = '!';
     for (;;);
 }
 
